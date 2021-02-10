@@ -1,0 +1,21 @@
+---
+# https://www.cyberciti.biz/faq/ansible-apt-update-all-packages-on-ubuntu-debian-linux/
+# https://raymii.org/s/tutorials/Ansible_-_Only-do-something-if-another-action-changed.html
+
+- name: Update APT Cache and Repos
+  become: true
+  apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
+  register: cache_repo_updates
+  notify: reboot_check
+
+# - name: Upgrade all packages to the latest version
+#   become: true
+#   apt:
+#     name: "*"
+#     state: latest
+
+- name: Upgrade APT Packages
+  become: true
+  apt: upgrade=dist force_apt_get=yes
+  register: packages_updates
+  notify: reboot_check

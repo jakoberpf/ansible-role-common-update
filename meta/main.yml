@@ -1,0 +1,25 @@
+---
+dependencies: []
+
+galaxy_info:
+  role_name: common_base
+  author: geerlingguy
+  description: Setup basics for Linux (Ubuntu,Debian,...)
+  # license: "license (BSD, MIT)"
+  min_ansible_version: 2.4
+  platforms:
+    # - name: EL
+    #   versions:
+    #     - 7
+    #     - 8
+    # - name: Debian
+    #   versions:
+    #     - stretch
+    #     - buster
+    - name: Ubuntu
+      versions:
+        - xenial
+        - bionic
+        - focal
+  galaxy_tags:
+    - system

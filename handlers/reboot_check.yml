@@ -1,0 +1,20 @@
+---
+## Sources
+# https://coderwall.com/p/0nckqg/ansible-reboot-ubuntu-if-needed
+
+# - name: Check if a reboot is needed for Debian and Ubuntu boxes
+#   register: reboot_required_file
+#   stat: path=/var/run/reboot-required get_md5=no
+#   notify: reboot
+
+# - name: Reboot system if required
+#   command: shutdown -r now 'Rebooting to complete system upgrade'
+#             removes=/var/run/reboot-required
+#   notify: reboot
+
+- name: check if a reboot is required
+  shell: "[ -f /var/run/reboot-required ]"
+  failed_when: False
+  register: reboot_required
+  changed_when: reboot_required.rc == 0
+  notify: reboot
