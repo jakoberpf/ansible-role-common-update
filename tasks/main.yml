@@ -1,21 +1,19 @@
 ---
 # https://www.cyberciti.biz/faq/ansible-apt-update-all-packages-on-ubuntu-debian-linux/
 # https://raymii.org/s/tutorials/Ansible_-_Only-do-something-if-another-action-changed.html
+# https://docs.ansible.com/ansible/latest/collections/ansible/builtin/apt_module.html
 
-- name: Update APT Cache and Repos
-  become: true
-  apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
-  register: cache_repo_updates
-  notify: reboot_check
+- name: Only run "update_cache=yes" if the last one is more than 3600 seconds ago
+  become: yes
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
 
-# - name: Upgrade all packages to the latest version
-#   become: true
-#   apt:
-#     name: "*"
-#     state: latest
-
-- name: Upgrade APT Packages
-  become: true
-  apt: upgrade=dist force_apt_get=yes
-  register: packages_updates
-  notify: reboot_check
+- name: Update all packages to their latest version
+  become: yes
+  apt:
+    name: "*"
+    state: latest
+  register: apt_action
+  retries: 100
+  until: apt_action is success or ('Failed to lock apt for exclusive operation' not in apt_action.msg and '/var/lib/dpkg/lock' not in apt_action.msg)
